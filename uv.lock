@@ -1278,10 +1278,14 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "mjlab" },
+    { name = "robot-descriptions" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "mjlab", specifier = ">=1.2.0" }]
+requires-dist = [
+    { name = "mjlab", specifier = ">=1.2.0" },
+    { name = "robot-descriptions", specifier = ">=1.23.0" },
+]
 
 [[package]]
 name = "networkx"
@@ -1951,6 +1955,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b3/c6/f3b320c27991c46f43ee9d856302c70dc2d0fb2dba4842ff739d5f46b393/rich-14.3.3.tar.gz", hash = "sha256:b8daa0b9e4eef54dd8cf7c86c03713f53241884e814f4e2f5fb342fe520f639b", size = 230582, upload-time = "2026-02-19T17:23:12.474Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/14/25/b208c5683343959b670dc001595f2f3737e051da617f66c31f7c4fa93abc/rich-14.3.3-py3-none-any.whl", hash = "sha256:793431c1f8619afa7d3b52b2cdec859562b950ea0d4b6b505397612db8d5362d", size = 310458, upload-time = "2026-02-19T17:23:13.732Z" },
+]
+
+[[package]]
+name = "robot-descriptions"
+version = "1.23.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "gitpython" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/39/77/793187ba6c773e0ec0e7b0ccff1192e836994b62c275ea5c71df8c977813/robot_descriptions-1.23.0.tar.gz", hash = "sha256:c3f2f807fd2311534bdb0948172f001f1c0848d35dfdf9e4b6eee5e8e0040c85", size = 335361, upload-time = "2026-03-09T17:03:36.551Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fa/1b/78fff37a42652c190c3094e17d576df627712e9e31fb0c6b04f71d1c5ee5/robot_descriptions-1.23.0-py3-none-any.whl", hash = "sha256:053c1ce2eceb48ec883f22fe6d0a2851681015b3aafc31cc4dba9aef419aadbc", size = 127721, upload-time = "2026-03-09T17:03:34.021Z" },
 ]
 
 [[package]]

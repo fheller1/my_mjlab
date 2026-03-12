@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "mjlab>=1.2.0",
+    "robot-descriptions>=1.23.0",
 ]
 
 [project.scripts]
