@@ -11,7 +11,6 @@ from mjlab.utils.spec_config import CollisionCfg
 
 from robot_descriptions import panda_mj_description
 
-
 PANDA_XML: Path = Path(panda_mj_description.MJCF_PATH)
 assert PANDA_XML.exists()
 
@@ -21,9 +20,26 @@ def get_assets(meshdir: str) -> dict[str, bytes]:
     update_assets(assets, PANDA_XML.parent / "assets", meshdir)
     return assets
 
+
 def get_spec() -> mujoco.MjSpec:
     spec = mujoco.MjSpec.from_file(str(PANDA_XML))
     spec.assets = get_assets(spec.meshdir)
+
+    # def name_finger_pads(body: mujoco.MjsBody) -> None:
+    #     if body.name in ("left_finger", "right_finger"):
+    #         pad_idx = 0
+    #         for geom in body.geoms:
+    #             if geom.type == mujoco.mjtGeom.mjGEOM_BOX:
+    #                 geom.name = f"{body.name}_pad_{pad_idx}"
+    #                 pad_idx += 1
+    #     # recurse into children
+    #     child = body.first_body
+    #     while child:
+    #         name_finger_pads(child)
+    #         child = child.next_body
+
+    # name_finger_pads(spec.worldbody)
+
     return spec
 
 
@@ -48,7 +64,7 @@ ARMATURE_LARGE = 0.1
 EFFORT_LIMIT_LARGE = 87.0
 
 PANDA_LARGE_JOINT_ACTUATOR_CFG = BuiltinPositionActuatorCfg(
-    target_names_expr=("panda_joint[1-4]",),
+    target_names_expr=("joint[1-4]",),
     stiffness=ARMATURE_LARGE * NATURAL_FREQ**2,
     damping=2.0 * DAMPING_RATIO * ARMATURE_LARGE * NATURAL_FREQ,
     effort_limit=EFFORT_LIMIT_LARGE,
@@ -60,7 +76,7 @@ ARMATURE_SMALL = 0.01
 EFFORT_LIMIT_SMALL = 12.0
 
 PANDA_SMALL_JOINT_ACTUATOR_CFG = BuiltinPositionActuatorCfg(
-    target_names_expr=("panda_joint[5-7]",),
+    target_names_expr=("joint[5-7]",),
     stiffness=ARMATURE_SMALL * NATURAL_FREQ**2,
     damping=2.0 * DAMPING_RATIO * ARMATURE_SMALL * NATURAL_FREQ,
     effort_limit=EFFORT_LIMIT_SMALL,
@@ -69,12 +85,12 @@ PANDA_SMALL_JOINT_ACTUATOR_CFG = BuiltinPositionActuatorCfg(
 
 # Gripper: prismatic finger joints, only actuate finger_joint1;
 # finger_joint2 is coupled via equality constraint in the XML (same as YAM).
-ARMATURE_FINGER = 0.001
-EFFORT_LIMIT_FINGER = 70.0   # N (force, not torque — prismatic joint)
+ARMATURE_FINGER = 0.001  # TODO this may be replaced with value from XML
+EFFORT_LIMIT_FINGER = 70.0  # N (force, not torque — prismatic joint)
 NATURAL_FREQ_GRIPPER = 5 * 2.0 * 3.1415926535  # 5 Hz — slower than arm
 
 PANDA_FINGER_ACTUATOR_CFG = BuiltinPositionActuatorCfg(
-    target_names_expr=("panda_finger_joint1",),
+    target_names_expr=("finger_joint1",),
     stiffness=ARMATURE_FINGER * NATURAL_FREQ_GRIPPER**2,
     damping=2.0 * DAMPING_RATIO * ARMATURE_FINGER * NATURAL_FREQ_GRIPPER,
     effort_limit=EFFORT_LIMIT_FINGER * 0.1,  # same safety cap pattern as YAM
@@ -91,15 +107,15 @@ PANDA_FINGER_ACTUATOR_CFG = BuiltinPositionActuatorCfg(
 HOME_KEYFRAME = EntityCfg.InitialStateCfg(
     pos=(0.0, 0.0, 0.0),
     joint_pos={
-        "panda_joint1": 0.0,
-        "panda_joint2": -0.785,   # -π/4
-        "panda_joint3": 0.0,
-        "panda_joint4": -2.356,   # -3π/4
-        "panda_joint5": 0.0,
-        "panda_joint6": 1.571,    # π/2
-        "panda_joint7": 0.785,    # π/4
-        "panda_finger_joint1": 0.04,  # fully open (40 mm)
-        "panda_finger_joint2": 0.04,
+        "joint1": 0.0,
+        "joint2": -0.785,  # -π/4
+        "joint3": 0.0,
+        "joint4": -2.356,  # -3π/4
+        "joint5": 0.0,
+        "joint6": 1.571,  # π/2
+        "joint7": 0.785,  # π/4
+        "finger_joint1": 0.04,  # fully open (40 mm)
+        "finger_joint2": 0.04,
     },
     joint_vel={".*": 0.0},
 )
@@ -174,4 +190,15 @@ if __name__ == "__main__":
     from mjlab.entity.entity import Entity
 
     robot = Entity(get_panda_robot_cfg())
-    viewer.launch(robot.spec.compile())
+    robot.spec.compile()
+
+    ###
+
+    spec = get_panda_robot_cfg().spec_fn()
+    model = spec.compile()
+    finger_geoms = [
+        model.geom(i).name
+        for i in range(model.ngeom)
+        # if "finger" in model.geom(i).name or "pad" in model.geom(i).name
+    ]
+    print(finger_geoms)
