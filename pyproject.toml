@@ -1,0 +1,16 @@
+[project]
+name = "my-mjlab"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "mjlab>=1.2.0",
+]
+
+[project.scripts]
+my-mjlab = "my_mjlab:main"
+
+[build-system]
+requires = ["uv_build>=0.10.9,<0.11.0"]
+build-backend = "uv_build"
