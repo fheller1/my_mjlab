@@ -15,6 +15,11 @@ PANDA_XML: Path = Path(panda_mj_description.MJCF_PATH)
 assert PANDA_XML.exists()
 
 
+# add to hand in panda xml:
+# /root/.cache/robot_descriptions/mujoco_menagerie/franka_emika_panda/panda.xml
+# <site name="grasp_site" pos="0 0 0.105" size="0.005" rgba="1 0 0 0.5"/>
+
+
 def get_assets(meshdir: str) -> dict[str, bytes]:
     assets: dict[str, bytes] = {}
     update_assets(assets, PANDA_XML.parent / "assets", meshdir)

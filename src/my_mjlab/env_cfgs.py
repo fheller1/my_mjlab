@@ -45,9 +45,6 @@ def franka_lift_cube_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
     assert isinstance(joint_pos_action, JointPositionActionCfg)
     joint_pos_action.scale = PANDA_ACTION_SCALE
 
-    # add to hand in panda xml:
-    # <site name="grasp_site" pos="0 0 0.105" size="0.005" rgba="1 0 0 0.5"/>
-
     cfg.observations["actor"].terms["ee_to_cube"].params["asset_cfg"].site_names = (
         "grasp_site",
     )
